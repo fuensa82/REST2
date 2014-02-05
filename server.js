@@ -35,7 +35,7 @@ app.get('/pilotos',function(req, res){
           client.end();
           res.json(results);
         }
-      }
+      } 
   );
 });
 app.get('/piloto/:id',function(req, res){
