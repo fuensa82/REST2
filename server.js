@@ -9,20 +9,20 @@ var client = mysql.createConnection({
   database: 'nodejs1'
 });
 var app = express();
-
-
-app.use(express.bodyParser());
-
-
-app.get('/pilotos',function(req, res){
-  console.log("PILOTOS");
-  client.connect(function(err) {
+client.connect(function(err) {
     if ( !err ) {
       console.log("Connected to MySQL");
     } else if ( err ) {
       console.log(err);
     }
   });
+
+app.use(express.bodyParser());
+
+
+app.get('/pilotos',function(req, res){
+  console.log("PILOTOS");
+  
    
   client.query(
       'SELECT * FROM usuarios',
@@ -32,7 +32,7 @@ app.get('/pilotos',function(req, res){
             console.log("Error: " + err.message);
           
         }else{     
-          client.end();
+          //client.end();
           res.json(results);
         }
       } 
@@ -40,13 +40,7 @@ app.get('/pilotos',function(req, res){
 });
 app.get('/piloto/:id',function(req, res){
   console.log("PILOTO "+req.params.id);
-  client.connect(function(err) {
-    if ( !err ) {
-      console.log("Connected to MySQL");
-    } else if ( err ) {
-      console.log(err);
-    }
-  });
+  
   console.log("query");
   client.query(
       'SELECT * FROM usuarios where id=?', [req.params.id],
@@ -54,12 +48,13 @@ app.get('/piloto/:id',function(req, res){
         if (err) {
           console.log("Error: " + err.message);
         }else{
-          // client.end();
+          //client.end();
           res.json(results);
         }
 
       }
   );
+  //client.end();
 });
 
 app.listen(3434);
