@@ -9,20 +9,29 @@ var client = mysql.createConnection({
   database: 'nodejs1'
 });
 var app = express();
-client.connect(function(err) {
+
+var conectar=function(){
+  console.log("Conectando a MySQL");
+  client.connect(function(err) {
     if ( !err ) {
       console.log("Connected to MySQL");
     } else if ( err ) {
-      console.log(err);
+      console.log("ERROR: "+err);
     }
   });
+};
+
+var desconectar=function(){
+  console.log("Cerrando MySQL");
+  client.end();
+};
 
 app.use(express.bodyParser());
 
 
 app.get('/pilotos',function(req, res){
   console.log("PILOTOS");
-  
+  conectar();
    
   client.query(
       'SELECT * FROM usuarios',
@@ -32,15 +41,16 @@ app.get('/pilotos',function(req, res){
             console.log("Error: " + err.message);
           
         }else{     
-          //client.end();
+          desconectar();
           res.json(results);
         }
       } 
   );
 });
+
 app.get('/piloto/:id',function(req, res){
   console.log("PILOTO "+req.params.id);
-  
+  conectar();
   console.log("query");
   client.query(
       'SELECT * FROM usuarios where id=?', [req.params.id],
@@ -48,13 +58,12 @@ app.get('/piloto/:id',function(req, res){
         if (err) {
           console.log("Error: " + err.message);
         }else{
-          //client.end();
           res.json(results);
         }
 
       }
   );
-  //client.end();
+  
 });
 
 app.listen(3434);
