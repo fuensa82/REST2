@@ -66,4 +66,25 @@ app.get('/piloto/:id',function(req, res){
   
 });
 
+app.get('/pilotoJPG/:id',function(req, res){
+  console.log("PILOTO "+req.params.id);
+  conectar();
+  console.log("query");
+  client.query(
+      'SELECT * FROM usuarios where id=?', [req.params.id],
+      function selectUsuario(err, results, fields) {
+        if (err) {
+          console.log("Error: " + err.message);
+        }else{
+          res.type('jpeg');
+          console.log(results);
+          console.log(results[0].imagen);
+          res.send(results[0].imagen);
+        }
+
+      }
+  );
+  
+});
+
 app.listen(3434);
